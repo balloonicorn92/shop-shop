@@ -3,7 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@apollo/client';
 import { QUERY_PRODUCTS } from '../utils/queries';
 import spinner from '../assets/spinner.gif';
-import { useStoreContext } from "../utils/GlobalState";
+import { useDispatch, useSelector } from 'react-redux'
 import Cart from '../components/Cart';
 import {
   REMOVE_FROM_CART,
@@ -12,11 +12,11 @@ import {
   UPDATE_PRODUCTS,
 } from '../utils/actions';
 import { idbPromise } from '../utils/helpers';
-import { parse } from 'graphql';
 
 function Detail() {
-  const [state, dispatch] = useStoreContext();
+  const dispatch = useDispatch();
   const { id } = useParams();
+  const state = useSelector((state) => state)
 
   const [currentProduct, setCurrentProduct] = useState({})
 
@@ -78,9 +78,10 @@ function Detail() {
     })
     idbPromise('cart', 'delete', {...currentProduct})
   }
+
   return (
     <>
-      {currentProduct ? (
+      {currentProduct && cart ? (
         <div className="container my-1">
           <Link to="/">← Back to Products</Link>
 
